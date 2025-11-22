@@ -1,0 +1,26 @@
+import express from "express";
+import cros from "cors";
+import { tokenRouter } from "./routes/tokengen.js";
+import { loginRouter } from "./routes/login.js";
+import { registerRouter } from "./routes/register.js";
+import { checkAuthrouter } from "./routes/checkauth.js";
+
+const PORT = 3001;
+
+const app = express();
+app.use(express.json());
+
+app.use(
+  cros({
+    origin: "*",
+  }),
+);
+
+app.use("/token", tokenRouter);
+app.use("/login", loginRouter);
+app.use("/register", registerRouter);
+app.use("/verify", checkAuthrouter);
+
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
+});
