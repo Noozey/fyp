@@ -4,6 +4,9 @@ import { tokenRouter } from "./routes/tokengen.js";
 import { loginRouter } from "./routes/login.js";
 import { registerRouter } from "./routes/register.js";
 import { checkAuthrouter } from "./routes/checkauth.js";
+import { clanderRouter } from "./routes/calendar.js";
+import { projectsRouter } from "./routes/projects.js";
+import { userRouter } from "./routes/user.js";
 
 const PORT = 3001;
 
@@ -20,6 +23,9 @@ app.use("/token", tokenRouter);
 app.use("/login", loginRouter);
 app.use("/register", registerRouter);
 app.use("/verify", checkAuthrouter);
+app.use("/calendar", clanderRouter);
+app.use("/project", projectsRouter);
+app.use("/user", userRouter);
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
