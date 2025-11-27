@@ -16,28 +16,39 @@ export const generateAccessToken = (req, res) => {
   const appCertificate = process.env.AGORA_APP_CERT;
 
   if (!appID || !appCertificate) {
-    console.error({ appID, appCertificate });
+    console.error("Missing AGORA_APP_ID or AGORA_APP_CERT");
     return res.status(500).json({
       error: "Agora APP ID or Certificate missing -- check .env file",
     });
   }
 
+  // Accept channelName from query parameter (for joining)
+  // Or generate random one (for creating new meeting)
   const channelName =
     req.query.channelName || Math.random().toString(36).substring(2, 10);
+
+  // Generate random UID for each user
   const uid = Math.floor(Math.random() * 10000);
   const role = RtcRole.PUBLISHER;
 
-  // FIXED: Calculate absolute Unix timestamp (current time + 1 hour)
+  // Token expires in 1 hour
   const expirationTimeInSeconds = Math.floor(Date.now() / 1000) + 3600;
 
+  // Generate token for this user and channel
   const token = RtcTokenBuilder.buildTokenWithUid(
     appID,
     appCertificate,
     channelName,
     uid,
     role,
-    expirationTimeInSeconds, // Now passing absolute timestamp
+    expirationTimeInSeconds,
   );
+
+  console.log("Access granted to channel:", {
+    channelName,
+    uid,
+    expiresAt: new Date(expirationTimeInSeconds * 1000).toISOString(),
+  });
 
   return res.json({ channelName, uid, token });
 };

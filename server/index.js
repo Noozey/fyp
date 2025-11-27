@@ -26,6 +26,7 @@ app.use("/verify", checkAuthrouter);
 app.use("/calendar", clanderRouter);
 app.use("/project", projectsRouter);
 app.use("/user", userRouter);
+app.use("/token", tokenRouter);
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
