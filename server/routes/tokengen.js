@@ -4,9 +4,6 @@ const { RtcTokenBuilder, RtcRole } = pkg;
 
 const tokenRouter = express.Router();
 
-const APP_ID = process.env.APP_ID;
-const APP_CERTIFICATE = process.env.APP_CERTIFICATE;
-
 const nocache = (req, resp, next) => {
   resp.header("Cache-Control", "private,no-cache,no-store,must-revalidate");
   resp.header("Expires", -1);
@@ -27,10 +24,11 @@ export const generateAccessToken = (req, res) => {
 
   const channelName =
     req.query.channelName || Math.random().toString(36).substring(2, 10);
-
   const uid = Math.floor(Math.random() * 10000);
   const role = RtcRole.PUBLISHER;
-  const expireTime = 3600;
+
+  // FIXED: Calculate absolute Unix timestamp (current time + 1 hour)
+  const expirationTimeInSeconds = Math.floor(Date.now() / 1000) + 3600;
 
   const token = RtcTokenBuilder.buildTokenWithUid(
     appID,
@@ -38,7 +36,7 @@ export const generateAccessToken = (req, res) => {
     channelName,
     uid,
     role,
-    expireTime,
+    expirationTimeInSeconds, // Now passing absolute timestamp
   );
 
   return res.json({ channelName, uid, token });
