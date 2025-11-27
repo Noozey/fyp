@@ -19,7 +19,7 @@ app.use(
   }),
 );
 
-app.use("/token", tokenRouter);
+app.use("/access_token", tokenRouter);
 app.use("/login", loginRouter);
 app.use("/register", registerRouter);
 app.use("/verify", checkAuthrouter);
