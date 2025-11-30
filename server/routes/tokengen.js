@@ -22,19 +22,14 @@ export const generateAccessToken = (req, res) => {
     });
   }
 
-  // Accept channelName from query parameter (for joining)
-  // Or generate random one (for creating new meeting)
   const channelName =
     req.query.channelName || Math.random().toString(36).substring(2, 10);
 
-  // Generate random UID for each user
   const uid = Math.floor(Math.random() * 10000);
   const role = RtcRole.PUBLISHER;
 
-  // Token expires in 1 hour
   const expirationTimeInSeconds = Math.floor(Date.now() / 1000) + 3600;
 
-  // Generate token for this user and channel
   const token = RtcTokenBuilder.buildTokenWithUid(
     appID,
     appCertificate,
@@ -43,12 +38,6 @@ export const generateAccessToken = (req, res) => {
     role,
     expirationTimeInSeconds,
   );
-
-  console.log("Access granted to channel:", {
-    channelName,
-    uid,
-    expiresAt: new Date(expirationTimeInSeconds * 1000).toISOString(),
-  });
 
   return res.json({ channelName, uid, token });
 };
